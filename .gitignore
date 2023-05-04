@@ -1,5 +1,8 @@
 ./build/
 ./cmake-build-debug/
 ./note.md
+./.cache/
+./.idea/
+
 
 
