@@ -1,5 +1,5 @@
-build/
-cmake-build-debug/
-note.md
+./build/
+./cmake-build-debug/
+./note.md
 
 
