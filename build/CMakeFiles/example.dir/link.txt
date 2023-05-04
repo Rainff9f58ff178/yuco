@@ -1,0 +1,1 @@
+/usr/bin/c++ CMakeFiles/example.dir/example.cpp.o -o example  /home/rain/src/c++_learn/uco/uco/lib/libuco.a 

@@ -1,0 +1,2 @@
+/usr/bin/ar qc /home/rain/src/c++_learn/uco/uco/lib/libuco.a CMakeFiles/uco.dir/uco.cpp.o
+/usr/bin/ranlib /home/rain/src/c++_learn/uco/uco/lib/libuco.a
