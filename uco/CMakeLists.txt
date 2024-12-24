@@ -2,18 +2,16 @@ cmake_minimum_required(VERSION 3.20)
 PROJECT(UCO)
 set(CMAKE_CXX_STANDARD 20)
 
-set(SRCS
-    uco.cpp uco.h )
+set(CMAKE_BUILD_TYPE Debug)
+set(SRCS 
+    Scheduler.cpp
+    AsyncScheduler.cpp) 
+include_directories(${CMAKE_SOURCE_DIR}/uco)
+
+add_library(uco STATIC ${SRCS})
+target_link_libraries(uco uring)
 
 
-#set_property(SOURCE swtch.S APPEND PROPERTY COMPILE_OPTIONS "-x" "assembler-with-cpp")
-#SET(CMAKE_ASM_FLAGS "${CFLAGS} ${ASM_OPTIONS}" )
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -m64")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -m64")
-set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -m64")
-set_property(SOURCE swtch.S PROPERTY LANGUAGE C)
-add_library(uco STATIC ${SRCS} )
 
-SET(LIBRARY_OUTPUT_PATH ${PROJECT_BINARY_DIR}/lib)
-SET(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib)
+
 
