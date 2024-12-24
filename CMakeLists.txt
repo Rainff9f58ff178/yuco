@@ -10,5 +10,6 @@ include_directories(${CMAKE_SOURCE_DIR}/uco)
 add_executable(example example.cpp)
 target_link_libraries(example uco)
 
-
+add_executable(echo_tcpserver tcpserver.cpp)
+target_link_libraries(echo_tcpserver uco)
 

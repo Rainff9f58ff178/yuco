@@ -2,6 +2,7 @@
 #include"liburing.h"
 #include <atomic>
 #include <cstdint>
+#include <sys/socket.h>
 #include<thread>
 #include<vector>
 #include<coroutine>
@@ -126,6 +127,35 @@ class AsyncScheduler{
         param param_;
     };
 
+    struct __async_accept:public __async_awaitable_base{
+        struct param{
+            int fd;
+            struct sockaddr* addr;
+            socklen_t* addr_len;
+            int flags;
+        };
+        __async_accept(AsyncScheduler& scheduler,param&& param):async_scheduler_(scheduler),param_(param){
+
+        }
+        
+        bool await_ready() noexcept{
+            return false;
+        }
+        void await_suspend(std::coroutine_handle<> handle){
+            this->handle_ = handle;
+            auto* sqe = io_uring_get_sqe(&async_scheduler_.ring_);
+            io_uring_sqe_set_data(sqe, this);
+            io_uring_prep_accept(sqe, param_.fd, param_.addr,param_.addr_len,param_.flags);
+            io_uring_submit(&async_scheduler_.ring_);
+        }
+        auto await_resume() ->int{
+            // async_write over;
+            return return_value_;
+        }
+        AsyncScheduler& async_scheduler_;
+        param param_;
+    };
+
 
 public:
 
@@ -147,9 +177,11 @@ public:
     __async_read async_read(int fd,void* buf, uint32_t bytes,uint64_t offset=-1){
         return __async_read{*this,{fd,buf,bytes,offset}};
     }
-
     __async_write async_write(int fd,void* buf,uint32_t bytes,uint64_t offset=-1){
         return __async_write{*this,{fd,buf,bytes,offset}};
+    }
+    __async_accept async_accept(int fd, struct sockaddr* addr, socklen_t* addr_len,int flags){
+        return __async_accept{*this,{fd,addr,addr_len,flags}};
     }
 
 };
