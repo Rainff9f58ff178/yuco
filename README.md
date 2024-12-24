@@ -30,3 +30,9 @@ void test_async_read(){
 }
 ```
 协程对象被Scheduler调度，AsyncScheduler使用iouring异步read系统调用，当read系统调用完成将此协程加入runable队列。
+
+
+
+## Note
+1.Lambda表达式作为协程的时候不能进行捕获，协程第一次退出后析构
+2.await_suspend返回corotinue_handle后会resume此协程
