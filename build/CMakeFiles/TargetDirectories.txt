@@ -1,0 +1,6 @@
+/home/rain/yuco/build/CMakeFiles/example.dir
+/home/rain/yuco/build/CMakeFiles/edit_cache.dir
+/home/rain/yuco/build/CMakeFiles/rebuild_cache.dir
+/home/rain/yuco/build/uco/CMakeFiles/uco.dir
+/home/rain/yuco/build/uco/CMakeFiles/edit_cache.dir
+/home/rain/yuco/build/uco/CMakeFiles/rebuild_cache.dir

@@ -1,0 +1,2 @@
+/usr/bin/ar qc libuco.a CMakeFiles/uco.dir/Scheduler.cpp.o CMakeFiles/uco.dir/AsyncScheduler.cpp.o
+/usr/bin/ranlib libuco.a
