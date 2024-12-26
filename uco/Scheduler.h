@@ -90,12 +90,6 @@ public:
         }
         // all task finshed.
 
-        auto clear = [&](){
-            for(auto& handle : tasks_handle){
-                assert(handle.done());
-                handle.destroy();
-            }
-        };
 
 
         if constexpr (!std::is_void_v<ReturnType>){
@@ -103,10 +97,8 @@ public:
             for(auto& e:tasks){
                 result.push_back (std::move(e.promise().result()));
             }
-            clear();
             return result;
         }else {
-            clear();
             return;
         }
     }

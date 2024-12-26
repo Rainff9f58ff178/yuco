@@ -150,11 +150,11 @@ void test_sync_wait_all(){
     }
     auto boot_task = [](runtime_state* state,auto&& tasks)->Task<void>{
         state->scheduler_->sync_wait_all<void>(std::move(tasks));
+        tasks.clear();
         co_return;
     }(&state,std::move(tasks));
 
     scheduler.schedule(std::move(boot_task));
-
 
 
     std::list<Task<uint32_t>> tasks2;
@@ -176,6 +176,7 @@ void test_sync_wait_all(){
         for(auto& e : r){
             std::cout<<e<<std::endl;
         }
+        tasks.clear();
         co_return;
     }(&state,std::move(tasks2));
 
@@ -205,7 +206,7 @@ int main(){
     // t_gen();
     // test_async_read();
     // test_sync_wait();
-    // test_sync_wait_all();
+    test_sync_wait_all();
     // what_if_call_resume_inacoro();
     return  0;
 }
