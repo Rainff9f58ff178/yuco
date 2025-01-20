@@ -5,7 +5,8 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_BUILD_TYPE Debug)
 set(SRCS 
     Scheduler.cpp
-    AsyncScheduler.cpp) 
+    AsyncScheduler.cpp
+    CoroSemaphore.cpp ) 
 include_directories(${CMAKE_SOURCE_DIR}/uco)
 
 add_library(uco STATIC ${SRCS})

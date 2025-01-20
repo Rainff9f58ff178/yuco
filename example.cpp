@@ -10,9 +10,10 @@
 #include "AsyncScheduler.h"
 #include "Scheduler.h"
 #include<cstring>
-
-
-
+#include<semaphore>
+#include "CoroSemaphore.h"
+#include "uco/CoroSemaphore.h"
+#include "uco/Scheduler.h"
 void test_task(){
     
     Scheduler scheduler;
@@ -200,13 +201,67 @@ void what_if_call_resume_inacoro(){
     coro.handle_.resume();
 
 }
+
+void test_semap(){
+
+    int sum1= 0;
+    int sum2= 0;
+    auto task1 = [](int& sum1)->Task<void> {
+        for(uint32_t i =0;i<100000;++i)
+            sum1+=1;
+
+        co_return;
+    }(sum1);
+    auto task2 = [](int& sum1)->Task<void> {
+        for(uint32_t i =0;i<100000;++i)
+            sum1+=1;
+
+        co_return;
+    }(sum1);
+    std::list<Task<void>> tasks;
+    tasks.push_back(std::move(task1));
+    tasks.push_back(std::move(task2));
+    g_scheduler.sync_wait_all<void>(std::move(tasks));
+    tasks.clear();
+    CoroSemaphore sep;
+    auto task3 = [](int& sum2,CoroSemaphore& sep)->Task<void> {
+        for(uint32_t i =0;i<100000;++i){
+            co_await sep.accquire();
+            sum2+=1;
+            co_await sep.release();
+        }
+        
+        co_return;
+    }(sum2,sep);
+    auto task4 = [](int& sum2,CoroSemaphore& sep)->Task<void> {
+        for(uint32_t i =0;i<100000;++i){
+            co_await sep.accquire();
+            sum2+=1;
+            co_await sep.release();
+        }
+
+        co_return;
+    }(sum2,sep);
+    tasks.push_back(std::move(task3));
+    tasks.push_back(std::move(task4));
+    g_scheduler.sync_wait_all<void>(std::move(tasks));
+
+    std::cout<<"sum1="<<sum1<<std::endl;
+    std::cout<<"sum2="<<sum2<<std::endl;
+
+}
 int main(){
     // test_task();
     // test_async_scheduler();
     // t_gen();
     // test_async_read();
     // test_sync_wait();
-    test_sync_wait_all();
+    // test_sync_wait_all();
     // what_if_call_resume_inacoro();
+    std::thread j =std::thread([&](){
+        g_scheduler.execute();
+    });
+    test_semap();
+    j.join();
     return  0;
 }
